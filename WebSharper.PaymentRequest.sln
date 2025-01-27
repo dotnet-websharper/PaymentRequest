@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WebSharper.PaymentRequest", "WebSharper.PaymentRequest\WebSharper.PaymentRequest.fsproj", "{C47F4150-F8B1-4AC4-B581-0E45ACC93566}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WebSharper.PaymentRequest.Sample", "WebSharper.PaymentRequest.Sample\WebSharper.PaymentRequest.Sample.fsproj", "{6D4707E8-69EF-426C-904A-CD9D8F929CC9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{C47F4150-F8B1-4AC4-B581-0E45ACC93566}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C47F4150-F8B1-4AC4-B581-0E45ACC93566}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C47F4150-F8B1-4AC4-B581-0E45ACC93566}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D4707E8-69EF-426C-904A-CD9D8F929CC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D4707E8-69EF-426C-904A-CD9D8F929CC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D4707E8-69EF-426C-904A-CD9D8F929CC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D4707E8-69EF-426C-904A-CD9D8F929CC9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

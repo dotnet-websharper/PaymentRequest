@@ -16,6 +16,13 @@ module Definition =
                 "pickup"
             ]
 
+        let PaymentCompletionResult = 
+            Pattern.EnumStrings "PaymentCompletionResult" [
+                "success"
+                "fail"
+                "unknown"
+            ]
+
     let Amount = 
         Pattern.Config "Amount" {
             Required = [
@@ -120,6 +127,15 @@ module Definition =
             Optional = []
         }
 
+    let PaymentResponseErrorFields = 
+        Pattern.Config "PaymentResponseErrorFields" {
+            Required = []
+            Optional = [
+                "error", T<string>
+                "paymentMethod", T<obj> 
+            ]
+        }
+
     let PaymentResponse =
         Class "PaymentResponse"
         |=> Inherits T<Dom.EventTarget>
@@ -132,6 +148,10 @@ module Definition =
             "requestId" =? T<string>
             "shippingAddress" =? T<obj>
             "shippingOption" =? T<string>
+
+            "complete" => !?Enum.PaymentCompletionResult?result ^-> T<Promise<unit>>
+            "retry" => !?PaymentResponseErrorFields?errorFields ^-> T<Promise<unit>>
+            "toJSON" => T<unit> ^-> T<obj>
         ]
 
     let PaymentRequest = 
@@ -190,9 +210,11 @@ module Definition =
                 PaymentUpdateDetails
                 PaymentDetailsModifier
                 PaymentItem
+                PaymentResponseErrorFields
                 Amount
 
                 Enum.PaymentShippingType
+                Enum.PaymentCompletionResult
             ]
         ]
 

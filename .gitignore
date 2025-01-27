@@ -16,4 +16,6 @@
 websharper.log
 /*/bin
 /*/obj
+/*/wwwroot/Content
+/*/wwwroot/dist
 

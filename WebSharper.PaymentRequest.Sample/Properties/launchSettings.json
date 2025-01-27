@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "WebSharper.PaymentRequest.Sample": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:52693;http://localhost:52694"
+    }
+  }
+}

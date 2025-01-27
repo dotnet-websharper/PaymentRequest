@@ -1,7 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <BaseOutputPath>bin\Debug\netstandard2.0\</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,8 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="WebSharper" Version="6.1.7.476" />    
-    <PackageReference Include="WebSharper.FSharp" Version="6.1.7.476" />
+    <PackageReference Include="WebSharper" Version="8.0.0.487-beta1" />    
+    <PackageReference Include="WebSharper.FSharp" Version="8.0.0.487-beta1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="9.0.200-beta.24561.2" />
   </ItemGroup>
 
 </Project>
