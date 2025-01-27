@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <BaseOutputPath>bin\Debug\netstandard2.0\</BaseOutputPath>
+	<BaseOutputPath>bin\Debug\netstandard2.0\</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

@@ -105,7 +105,6 @@ module PaymentDetails =
 
 [<JavaScript>]
 module Client =    
-    
     let handlePaymentRequest() = promise {        
 
         // Define the payment method (e.g., Google Pay)
@@ -120,14 +119,13 @@ module Client =
 
             Console.Log("PaymentRequest JSON:", paymentRequest)
 
-
             // Show the payment UI
-            let! paymentResponse = paymentRequest.Show() |> Promise.AsAsync
+            let! paymentResponse = paymentRequest.Show()
 
             Console.Log("Payment successful!", paymentResponse)
 
             // Complete the payment process
-            do! paymentResponse.Complete(PaymentCompletionResult.Success) |> Promise.AsAsync
+            do! paymentResponse.Complete(PaymentCompletionResult.Success)
             JS.Alert("Payment completed successfully!")
         with ex ->
             Console.Error("Payment failed:", ex.Message)
@@ -136,7 +134,6 @@ module Client =
 
     [<SPAEntryPoint>]
     let Main () =
-        let newName = Var.Create ""
 
         IndexTemplate.Main()
             .Pay(fun _ -> 
