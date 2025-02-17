@@ -7,6 +7,7 @@ This repository provides an F# [WebSharper](https://websharper.com/) binding for
 The repository consists of two main projects:
 
 1. **Binding Project**:
+
    - Contains the F# WebSharper binding for the Payment Request API.
 
 2. **Sample Project**:
@@ -25,8 +26,6 @@ The repository consists of two main projects:
 ### Prerequisites
 
 - [.NET SDK](https://dotnet.microsoft.com/download) installed on your machine.
-- Node.js and npm (for building web assets).
-- WebSharper tools.
 
 ### Steps
 
@@ -86,8 +85,8 @@ open WebSharper.PaymentRequest
 type IndexTemplate = Template<"wwwroot/index.html", ClientLoad.FromDocument>
 
 [<JavaScript>]
-module Client =    
-    let handlePaymentRequest() = promise {        
+module Client =
+    let handlePaymentRequest() = promise {
 
         // Define the payment method (e.g., Google Pay)
         let paymentMethodData = PaymentMethodData.create()
@@ -119,7 +118,7 @@ module Client =
 
         IndexTemplate.Main()
             // Binds the payment logic to the Pay button in the template, triggering the handlePaymentRequest function when clicked
-            .Pay(fun _ -> 
+            .Pay(fun _ ->
                 async {
                     do! handlePaymentRequest() |> Promise.AsAsync
                 }
