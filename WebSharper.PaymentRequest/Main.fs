@@ -152,17 +152,24 @@ module Definition =
             "complete" => !?Enum.PaymentCompletionResult?result ^-> T<Promise<unit>>
             "retry" => !?PaymentResponseErrorFields?errorFields ^-> T<Promise<unit>>
             "toJSON" => T<unit> ^-> T<obj>
+
+            "onpayerdetailchange" =@ PaymentRequestUpdateEvent ^-> T<unit>
         ]
 
     let PaymentRequest = 
         Class "PaymentRequest"
+        |=> Inherits T<Dom.EventTarget>
         |+> Static [
             Constructor ((!|PaymentMethodData)?methodData * PaymentDetails?Details * !?PaymentOptions?options)
         ]
         |+> Instance [
+            "id" =? T<string>
+
             "show" => !?PaymentUpdateDetails?details ^-> T<Promise<_>>[PaymentResponse]
             "abort" => T<unit> ^-> T<unit>
             "canMakePayment" => T<unit> ^-> T<Promise<bool>>
+
+            "onpaymentmethodchange" =@ PaymentMethodChangeEvent ^-> T<unit>
         ]
 
     let SecurePaymentInstrument = 
