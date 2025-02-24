@@ -154,7 +154,9 @@ module Definition =
             "toJSON" => T<unit> ^-> T<obj>
 
             "onpayerdetailchange" =@ T<unit> ^-> T<unit>
+            |> ObsoleteWithMessage "Use OnPayerDetailChange instead"
             "onpayerdetailchange" =@ PaymentRequestUpdateEvent ^-> T<unit>
+            |> WithSourceName "OnPayerDetailChange"
         ]
 
     let PaymentRequest = 
@@ -171,7 +173,9 @@ module Definition =
             "canMakePayment" => T<unit> ^-> T<Promise<bool>>
 
             "onpaymentmethodchange" =@ T<unit> ^-> T<unit>
+            |> ObsoleteWithMessage "Use OnPaymentMethodChange instead"
             "onpaymentmethodchange" =@ PaymentMethodChangeEvent ^-> T<unit>
+            |> WithSourceName "OnPaymentMethodChange"
         ]
 
     let SecurePaymentInstrument = 
