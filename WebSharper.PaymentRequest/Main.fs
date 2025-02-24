@@ -153,6 +153,7 @@ module Definition =
             "retry" => !?PaymentResponseErrorFields?errorFields ^-> T<Promise<unit>>
             "toJSON" => T<unit> ^-> T<obj>
 
+            "onpayerdetailchange" =@ T<unit> ^-> T<unit>
             "onpayerdetailchange" =@ PaymentRequestUpdateEvent ^-> T<unit>
         ]
 
@@ -169,6 +170,7 @@ module Definition =
             "abort" => T<unit> ^-> T<unit>
             "canMakePayment" => T<unit> ^-> T<Promise<bool>>
 
+            "onpaymentmethodchange" =@ T<unit> ^-> T<unit>
             "onpaymentmethodchange" =@ PaymentMethodChangeEvent ^-> T<unit>
         ]
 
