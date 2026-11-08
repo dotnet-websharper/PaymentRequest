@@ -3,11 +3,14 @@ namespace WebSharper.PaymentRequest.Sample
 open WebSharper
 open WebSharper.JavaScript
 open WebSharper.UI
+open WebSharper.UI.Notation
 open WebSharper.UI.Client
 open WebSharper.UI.Templating
 open WebSharper.PaymentRequest
 
-type IndexTemplate = Template<"wwwroot/index.html", ClientLoad.FromDocument>
+// The Google Pay payment method payload. It becomes the `data` member of the
+// `PaymentMethodData` dictionary, so the field names stay lowercase to match
+// the Google Pay JSON schema.
 
 type AllowedPaymentMethodsParameter = {
     allowedAuthMethods: string array
@@ -19,7 +22,7 @@ type TokenizationSpecificationParameter = {
     gatewayMerchantId: string
 }
 
-type TokenizationSpecification= {
+type TokenizationSpecification = {
     ``type``: string
     parameters: TokenizationSpecificationParameter
 }
@@ -45,7 +48,14 @@ type PaymentMethodsData = {
 }
 
 [<JavaScript>]
-module PaymentMethodData = 
+module Client =
+    // The template is loaded from the DOM, so editing index.html and refreshing
+    // the browser is enough; a rebuild is only needed when holes change.
+    type IndexTemplate = Template<"wwwroot/index.html", ClientLoad.FromDocument>
+
+    let status = Var.Create "Ready. Start a payment to open the browser's payment sheet."
+    let preview = Var.Create "No payment request has been created yet."
+
     let authMethods = [| "PAN_ONLY"; "CRYPTOGRAM_3DS" |]
     let cardNetworks = [| "VISA"; "MASTERCARD" |]
 
@@ -76,71 +86,76 @@ module PaymentMethodData =
         currencyCode = "USD"
     }
 
-    let create () =
-        let paymentMethodData = new PaymentMethodData()
-        paymentMethodData.SupportedMethods <- "https://google.com/pay"
-        paymentMethodData.Data <- {
-            environment = "TEST"
-            apiVersion = 2
-            apiVersionMinor = 0
-            allowedPaymentMethods = [| allowedPaymentMethods |]
-            transactionInfo = transactionInfo
-        }
-        Console.Log("Payment Method Data:", paymentMethodData)
-        paymentMethodData
+    let methodData : PaymentMethodsData = {
+        environment = "TEST"
+        apiVersion = 2
+        apiVersionMinor = 0
+        allowedPaymentMethods = [| allowedPaymentMethods |]
+        transactionInfo = transactionInfo
+    }
 
-[<JavaScript>]
-module PaymentDetails = 
-    let create () = 
-        let paymentDetails = new PaymentDetails()
+    /// Build a `PaymentMethodData` dictionary for Google Pay.
+    let createPaymentMethod () =
+        let method = new PaymentMethodData()
+        method.SupportedMethods <- "https://google.com/pay"
+        method.Data <- methodData
+        method
 
-        paymentDetails.Total <- new PaymentItem(
+    /// Build a `PaymentDetails` dictionary with the amount to charge.
+    let createPaymentDetails () =
+        let details = new PaymentDetails()
+        details.Total <- new PaymentItem(
             label = "Total",
             amount = new Amount(
                 currency = "USD",
                 value = "1.00"
             )
         )
-        paymentDetails
+        details
 
-[<JavaScript>]
-module Client =    
-    let handlePaymentRequest() = promise {        
+    /// Build a `PaymentRequest` for Google Pay with a 1.00 USD total.
+    let createPaymentRequest () =
+        new PaymentRequest([| createPaymentMethod () |], createPaymentDetails ())
 
-        // Define the payment method (e.g., Google Pay)
-        let paymentMethodData = PaymentMethodData.create()
+    let checkSupport () =
+        promise {
+            try
+                status := "Checking whether the browser supports this payment method..."
+                let request = createPaymentRequest ()
+                let! supported = request.CanMakePayment()
+                if supported then
+                    status := "Google Pay is available in this browser."
+                    preview := "Payment request created and the browser has a matching payment method."
+                else
+                    status := "Google Pay is not available in this browser."
+                    preview := "Payment request created, but no matching payment method is configured."
+            with ex ->
+                status := $"Error: {ex.Message}"
+                preview := "Could not create a payment request."
+        }
 
-        // Define the payment details (e.g., total cost)
-        let paymentDetails = PaymentDetails.create()
+    let startPayment () =
+        promise {
+            try
+                status := "Opening the payment sheet..."
+                preview := "Payment request created; waiting for the user to confirm."
+                let request = createPaymentRequest ()
 
-        try
-            // Create a PaymentRequest instance
-            let paymentRequest = new PaymentRequest([| paymentMethodData |], paymentDetails)
+                let! response = request.Show()
+                status := $"Payment completed ({response.MethodName})."
+                preview := "Payment response received; the browser handled the payment details."
 
-            Console.Log("PaymentRequest JSON:", paymentRequest)
-
-            // Show the payment UI
-            let! paymentResponse = paymentRequest.Show()
-
-            Console.Log("Payment successful!", paymentResponse)
-
-            // Complete the payment process
-            do! paymentResponse.Complete(PaymentCompletionResult.Success)
-            JS.Alert("Payment completed successfully!")
-        with ex ->
-            Console.Error("Payment failed:", ex.Message)
-            JS.Alert("Payment failed or was cancelled.")
-    }
+                do! response.Complete(PaymentCompletionResult.Success)
+            with ex ->
+                status := $"Payment failed or was cancelled: {ex.Message}"
+                preview := "No payment was completed."
+        }
 
     [<SPAEntryPoint>]
     let Main () =
-
-        IndexTemplate.Main()
-            .Pay(fun _ -> 
-                async {
-                    do! handlePaymentRequest() |> Promise.AsAsync
-                }
-                |> Async.StartImmediate
-            )
-            .Doc()
-        |> Doc.RunById "main"
+        IndexTemplate()
+            .startPayment(fun _ -> startPayment () |> ignore)
+            .checkSupport(fun _ -> checkSupport () |> ignore)
+            .status(status.V)
+            .preview(preview.V)
+            .Bind()
