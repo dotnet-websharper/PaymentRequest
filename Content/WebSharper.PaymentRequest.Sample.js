@@ -26,14 +26,14 @@ function status(){
 function startPayment(){
   return new Promise((_1) => {
     _1(new Promise((_2) => {
-      _2((status().Set("Opening the payment sheet..."),preview().Set("Payment request created; waiting for the user to confirm."),createPaymentRequest().show().then((d) => {
-        status().Set("Payment completed ("+d.methodName+").");
+      _2((status().Set("Opening the payment sheet..."),preview().Set("Payment request created; waiting for the user to confirm."),createPaymentRequest().show().then((a) => {
+        status().Set("Payment completed ("+a.methodName+").");
         preview().Set("Payment response received; the browser handled the payment details.");
-        return d.complete("success").then(() => Promise.resolve(null));
+        return a.complete("success").then(() => Promise.resolve(null));
       })));
-    })["catch"]((d) => {
-      const a=unwrapExn(d);
-      status().Set("Payment failed or was cancelled: "+a.message);
+    })["catch"]((a) => {
+      const a_1=unwrapExn(a);
+      status().Set("Payment failed or was cancelled: "+a_1.message);
       preview().Set("No payment was completed.");
       return Promise.resolve(null);
     }));
@@ -42,10 +42,10 @@ function startPayment(){
 function checkSupport(){
   return new Promise((_1) => {
     _1(new Promise((_2) => {
-      _2((status().Set("Checking whether the browser supports this payment method..."),createPaymentRequest().canMakePayment().then((d) => d?(status().Set("Google Pay is available in this browser."),preview().Set("Payment request created and the browser has a matching payment method."),Promise.resolve(null)):(status().Set("Google Pay is not available in this browser."),preview().Set("Payment request created, but no matching payment method is configured."),Promise.resolve(null)))));
-    })["catch"]((d) => {
-      const a=unwrapExn(d);
-      status().Set("Error: "+a.message);
+      _2((status().Set("Checking whether the browser supports this payment method..."),createPaymentRequest().canMakePayment().then((a) => a?(status().Set("Google Pay is available in this browser."),preview().Set("Payment request created and the browser has a matching payment method."),Promise.resolve(null)):(status().Set("Google Pay is not available in this browser."),preview().Set("Payment request created, but no matching payment method is configured."),Promise.resolve(null)))));
+    })["catch"]((a) => {
+      const a_1=unwrapExn(a);
+      status().Set("Error: "+a_1.message);
       preview().Set("Could not create a payment request.");
       return Promise.resolve(null);
     }));
@@ -3019,7 +3019,7 @@ class Event extends TemplateHole {
 }
 function Handler(name, callback){
   return Attr.A3((el) => {
-    el.addEventListener(name, (d) =>(callback(el))(d), false);
+    el.addEventListener(name, (o) =>(callback(el))(o), false);
   });
 }
 function OnAfterRender(callback){
@@ -3056,7 +3056,7 @@ function DynamicCustom(set_1, view){
 class Attr {
   static HandlerImpl(event, q){
     return Attr.A3((el) => {
-      el.addEventListener(event, (d) =>(q(el))(d), false);
+      el.addEventListener(event, (o) =>(q(el))(o), false);
     });
   }
   static Concat(xs){
