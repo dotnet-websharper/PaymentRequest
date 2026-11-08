@@ -1,21 +1,53 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>WebSharper.PaymentRequest.Sample</title>
+    <title>WebSharper Payment Request API Demo</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%234f46e5'/%3E%3Crect x='3' y='5' width='10' height='6' rx='1' fill='white'/%3E%3Crect x='3' y='7' width='10' height='1.4' fill='%234f46e5'/%3E%3C/svg%3E" />
     <link rel="stylesheet" type="text/css" href="Content/WebSharper.PaymentRequest.Sample.css" />
-    <style>
-        /* Don't show the not-yet-loaded templates */
-        [ws-template], [ws-children-template] { display: none; }
-    </style>
+    <link rel="stylesheet" type="text/css" href="site.css" />
     <script type="module" src="Content/WebSharper.PaymentRequest.Sample.head.js"></script>
 </head>
 <body>
-    <div id="main" ws-children-template="Main">
-        <h1>Payment Request API Sample</h1>
-        <button id="payButton" ws-onclick="Pay">Pay with Google Pay</button>
-    </div>
+    <main class="page">
+        <header class="hero">
+            <h1>Payment Request API Demo</h1>
+            <p class="lede">
+                Build a browser-native payment sheet with the
+                <a href="https://developer.mozilla.org/en-US/docs/Web/API/Payment_Request_API" target="_blank" rel="noreferrer">Payment Request API</a>.
+                The page must run in a secure context (HTTPS or localhost).
+            </p>
+        </header>
+
+        <section class="card">
+            <h2>Payment request</h2>
+            <p class="hint">
+                Creates a <code>PaymentRequest</code> for Google Pay, asks the browser whether it can
+                handle it, and opens the payment sheet.
+            </p>
+            <div class="actions">
+                <button class="btn btn-primary" ws-onclick="startPayment">Start payment</button>
+                <button class="btn" ws-onclick="checkSupport">Check availability</button>
+            </div>
+            <p class="status" role="status">${status}</p>
+            <pre class="preview">${preview}</pre>
+        </section>
+
+        <section class="card">
+            <h2>What happens</h2>
+            <ul class="notes">
+                <li>The sample uses the <code>https://google.com/pay</code> payment method.</li>
+                <li>The browser opens its own payment sheet; no card data ever reaches this page.</li>
+                <li><code>PaymentRequest.show()</code> resolves with a <code>PaymentResponse</code> once the user confirms.</li>
+            </ul>
+        </section>
+
+        <p class="hint">
+            If no payment sheet appears, the browser has no configured payment method. Chrome or Edge
+            with a saved card, or Google Pay, works best.
+        </p>
+    </main>
     <script type="module" src="Content/WebSharper.PaymentRequest.Sample.min.js"></script>
 </body>
 </html>
